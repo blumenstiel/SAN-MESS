@@ -4,7 +4,6 @@
 import kaggle
 import os
 import argparse
-import datasets
 from detectron2.data import DatasetCatalog
 from prepare_datasets import (
     prepare_bdd100k,
@@ -38,8 +37,9 @@ if __name__ == '__main__':
     parser.add_argument('--stats', action='store_true', help='Only show dataset statistics')
     args = parser.parse_args()
 
-    # set dataset directory
+    # set dataset directory and register datasets
     os.environ['DETECTRON2_DATASETS'] = args.dataset_dir
+    import datasets
 
     # prepare datasets
     dataset_dict = {
