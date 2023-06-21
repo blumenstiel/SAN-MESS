@@ -46,6 +46,9 @@ from san import (
 from san.data import build_detection_test_loader, build_detection_train_loader
 from san.utils import WandbWriter, setup_wandb
 
+import mess.datasets
+from mess.evaluation.sem_seg_evaluation import MESSSemSegEvaluator
+
 
 class Trainer(DefaultTrainer):
     def build_writers(self):
@@ -63,7 +66,7 @@ class Trainer(DefaultTrainer):
         # semantic segmentation
         if evaluator_type in ["sem_seg", "ade20k_panoptic_seg"]:
             evaluator_list.append(
-                SemSegEvaluator(
+                MESSSemSegEvaluator(
                     dataset_name,
                     distributed=True,
                     output_dir=output_folder,

@@ -1,16 +1,18 @@
 # run script with
 # bash mess/setup_env.sh
 
-# Create new environment "mess"
-conda create --name mess -y python=3.8
+# Create new environment "san"
+conda create --name san -y python=3.8
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate mess
+conda activate san
 
-# Install PyTorch with CUDA 11.3
-conda install -y pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1 cudatoolkit=11.3 -c pytorch -c conda-forge
-# Install Detectron2
-python -m pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu113/torch1.10/index.html
+# install requirements from SAN
+python -m pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu113
+python -m pip install -r requirements.txt
+python -m pip install 'git+https://github.com/facebookresearch/detectron2.git'
 
+# install packages for dataset preparation
 pip install gdown
 pip install kaggle
 pip install rasterio
+pip install pandas

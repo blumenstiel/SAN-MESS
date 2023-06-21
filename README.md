@@ -1,3 +1,48 @@
+# Multi-domain Evaluation of Semantic Segmentation (MESS) with SAN
+
+[[Website (soon)](https://github.io)] [[arXiv (soon)](https://arxiv.org/)] [[GitHub](https://github.com/blumenstiel/MESS)]
+
+This directory contains the code for the MESS evaluation of SAN. Please see the commits for our changes of the model.
+
+## Setup
+Create a conda environment `san` and install the required packages. See [mess/README.md](mess/README.md) for details.
+```sh
+ bash mess/setup_env.sh
+```
+
+Prepare the datasets by following the instructions in [mess/DATASETS.md](mess/DATASETS.md). The `san` env can be used for the dataset preparation. If you evaluate multiple models with MESS, you can change the `dataset_dir` argument and the `DETECTRON2_DATASETS` environment variable to a common directory (see [mess/DATASETS.md](mess/DATASETS.md) and [mess/eval.sh](mess/eval.sh), e.g., `../mess_datasets`). 
+
+Download the SAN weights with
+```sh
+mkdir weights
+wget https://huggingface.co/Mendel192/san/resolve/main/san_vit_b_16.pth -O weights/san_vit_b_16.pth
+wget https://huggingface.co/Mendel192/san/resolve/main/san_vit_large_14.pth -O weights/san_vit_large_14.pth
+```
+
+## Evaluation
+To evaluate the SAN models on the MESS dataset, run
+```sh
+bash mess/eval.sh
+
+# for evaluation in the background:
+nohup bash mess/eval.sh > eval.log &
+tail -f eval.log 
+```
+
+For evaluating a single dataset, select the DATASET from [mess/DATASETS.md](mess/DATASETS.md), the DETECTRON2_DATASETS path, and run
+```
+conda activate san
+export DETECTRON2_DATASETS="datasets"
+DATASET=<dataset_name>
+
+# Base model
+python train_net.py --eval-only --num-gpus 1 --config-file configs/san_clip_vit_res4_coco.yaml OUTPUT_DIR output/SAN_base/$DATASET MODEL.WEIGHTS weights/san_vit_b_16.pth DATASETS.TEST \(\"$DATASET\",\)
+# Large model
+python train_net.py --eval-only --num-gpus 1 --config-file configs/san_clip_vit_large_res4_coco.yaml OUTPUT_DIR output/SAN_large/$DATASET MODEL.WEIGHTS weights/san_vit_large_14.pth DATASETS.TEST \(\"$DATASET\",\)
+```
+
+# --- Original SAN README.md ---
+
 # [CVPR2023-Highlight] Side Adapter Network for Open-Vocabulary Semantic Segmentation
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/side-adapter-network-for-open-vocabulary/open-vocabulary-semantic-segmentation-on-2)](https://paperswithcode.com/sota/open-vocabulary-semantic-segmentation-on-2?p=side-adapter-network-for-open-vocabulary)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/side-adapter-network-for-open-vocabulary/open-vocabulary-semantic-segmentation-on-3)](https://paperswithcode.com/sota/open-vocabulary-semantic-segmentation-on-3?p=side-adapter-network-for-open-vocabulary)
